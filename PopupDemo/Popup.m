@@ -17,6 +17,7 @@ static const CGFloat kPopupSubTitleFontSize = 15;
 #define FlatBlackColor [UIColor colorWithRed:0.204 green:0.239 blue:0.275 alpha:1] /*#343d46*/
 
 CGFloat currentKeyboardHeight = 0.0f;
+CGFloat popupDimension = 300.0f;
 
 BOOL isBlurSet = YES;
 
@@ -827,33 +828,25 @@ BOOL isBlurSet = YES;
 }
 
 - (void)setPopupFrameForTextField:(int)num {
-
+    
+    //Yea, I hardcoded this value...
     currentKeyboardHeight = 216;
     
-    //#warning integrate shit for iphone 4,5,6 screen sizes
-    
-    switch (num) {
-        case 1: {
-            [UIView animateWithDuration:0.2 animations:^{
-                [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight, 300, 300)];
-            }];
-            break;
-        }
-        case 2: {
-            [UIView animateWithDuration:0.2 animations:^{
-                [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight, 300, 300)];
-            }];
-            break;
-        }
-        case 3: {
-            [UIView animateWithDuration:0.2 animations:^{
-                [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight, 300, 300)];
-            }];
-            break;
-        }
-        default: {
-            break;
-        }
+    //Integrate for iPhone 4, 5, 6, 6+ screen sizes
+    if ([UIScreen mainScreen].bounds.size.height == 480) {
+        [UIView animateWithDuration:0.2 animations:^{
+            [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight - 70, 300, 300)];
+        }];
+    }
+    else if ([UIScreen mainScreen].bounds.size.height == 568) {
+        [UIView animateWithDuration:0.2 animations:^{
+            [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight - 30, 300, 300)];
+        }];
+    }
+    else if ([UIScreen mainScreen].bounds.size.height > 568) {
+        [UIView animateWithDuration:0.2 animations:^{
+            [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight, 300, 300)];
+        }];
     }
     
 }

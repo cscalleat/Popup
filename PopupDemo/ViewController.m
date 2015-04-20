@@ -164,7 +164,7 @@ CGFloat width;
     [extraBtn addTarget:self action:@selector(setBlur:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:extraBtn];
     
-    UIButton *noneBtn = [[UIButton alloc] initWithFrame:CGRectMake(270, 154, 50, 24)];
+    UIButton *noneBtn = [[UIButton alloc] initWithFrame:CGRectMake(270, 154, 44, 24)];
     [noneBtn setBackgroundColor:[UIColor lightGrayColor]];
     [noneBtn.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0]];
     [noneBtn setTitle:@"None" forState:UIControlStateNormal];
@@ -247,10 +247,10 @@ CGFloat width;
     [threeBtn addTarget:self action:@selector(setTextFields:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:threeBtn];
     
-    UIButton *noneTextBtn = [[UIButton alloc] initWithFrame:CGRectMake(280, 300, 50, 24)];
+    UIButton *noneTextBtn = [[UIButton alloc] initWithFrame:CGRectMake(280, 300, 30, 24)];
     [noneTextBtn setBackgroundColor:[UIColor lightGrayColor]];
     [noneTextBtn.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:13.0]];
-    [noneTextBtn setTitle:@"None" forState:UIControlStateNormal];
+    [noneTextBtn setTitle:@"0" forState:UIControlStateNormal];
     [noneTextBtn.layer setCornerRadius:4.0];
     [noneTextBtn.layer setMasksToBounds:YES];
     [noneTextBtn setTag:12];
@@ -337,7 +337,7 @@ CGFloat width;
 //--------------------------Pop button
 - (void)setUpEleventhLine {
     
-    UIButton *popBtn = [[UIButton alloc] initWithFrame:CGRectMake(8, self.view.frame.size.height - 48, self.view.frame.size.width - 16, 40)];
+    UIButton *popBtn = [[UIButton alloc] initWithFrame:CGRectMake(8, self.view.frame.size.height - 38, self.view.frame.size.width - 16, 30)];
     [popBtn.layer setCornerRadius:8.0];
     [popBtn.layer setMasksToBounds:YES];
     [popBtn setBackgroundColor:[UIColor blueColor]];
