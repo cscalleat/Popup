@@ -9,6 +9,7 @@
 
 #import "Popup.h"
 
+
 static const CGFloat kPopupTitleFontSize = 30;
 static const CGFloat kPopupSubTitleFontSize = 15;
 
@@ -17,6 +18,7 @@ static const CGFloat kPopupSubTitleFontSize = 15;
 #define FlatBlackColor [UIColor colorWithRed:0.204 green:0.239 blue:0.275 alpha:1] /*#343d46*/
 
 CGFloat currentKeyboardHeight = 0.0f;
+CGFloat popupDimension = 300.0f;
 
 BOOL isBlurSet = YES;
 
@@ -55,6 +57,7 @@ BOOL isBlurSet = YES;
 
 @end
 @implementation Popup
+
 
 #pragma mark Instance Types
 
@@ -124,7 +127,9 @@ BOOL isBlurSet = YES;
     
 }
 
+
 #pragma mark Creation Methods
+
 
 - (void)formulateEverything {
     
@@ -192,7 +197,9 @@ BOOL isBlurSet = YES;
     
 }
 
+
 #pragma mark Accessor Methods
+
 
 - (void)setBackgroundBlurType:(PopupBackGroundBlurType)backgroundBlurType {
     [self blurBackgroundWithType:backgroundBlurType];
@@ -259,7 +266,9 @@ BOOL isBlurSet = YES;
     
 }
 
+
 #pragma mark Setup Methods
+
 
 - (void)setupTitle {
     
@@ -267,14 +276,14 @@ BOOL isBlurSet = YES;
         
         if (!titleLabel) {
             titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(8, 8, popupView.frame.size.width - 16, 40)];
+            [titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:kPopupTitleFontSize]];
+            [titleLabel setAdjustsFontSizeToFitWidth:YES];
+            [titleLabel setTextAlignment:NSTextAlignmentCenter];
+            [titleLabel setTextColor:[UIColor colorWithRed:0.329 green:0.396 blue:0.584 alpha:1] /*#546595*/];
         }
         
         [titleLabel setText:pTitle];
-        [titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:kPopupTitleFontSize]];
-        [titleLabel setAdjustsFontSizeToFitWidth:YES];
-        [titleLabel setTextAlignment:NSTextAlignmentCenter];
-        [titleLabel setTextColor:[UIColor colorWithRed:0.329 green:0.396 blue:0.584 alpha:1] /*#546595*/];
-        
+
         [popupView addSubview:titleLabel];
     }
     
@@ -288,7 +297,14 @@ BOOL isBlurSet = YES;
 
         if (!subTitleLabel) {
             subTitleLabel = [[UILabel alloc] init];
+            [subTitleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:kPopupSubTitleFontSize]];
+            [subTitleLabel setAdjustsFontSizeToFitWidth:YES];
+            [subTitleLabel setTextAlignment:NSTextAlignmentCenter];
+            [subTitleLabel setTextColor:[UIColor colorWithRed:0.408 green:0.478 blue:0.682 alpha:1] /*#687aae*/];
+            [subTitleLabel setNumberOfLines:20];
         }
+        
+        //Adjust the subtitle frame if there are textfields present
         if ([pTextFieldPlaceholderArray count] == 0) {
             [subTitleLabel setFrame:CGRectMake(8, titleLabelHeight + 16, popupView.frame.size.width - 16, popupView.frame.size.height - 16 - 40 - (titleLabelHeight + 16))];
         }
@@ -308,11 +324,6 @@ BOOL isBlurSet = YES;
         }
         
         [subTitleLabel setText:pSubTitle];
-        [subTitleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:kPopupSubTitleFontSize]];
-        [subTitleLabel setAdjustsFontSizeToFitWidth:YES];
-        [subTitleLabel setTextAlignment:NSTextAlignmentCenter];
-        [subTitleLabel setTextColor:[UIColor colorWithRed:0.408 green:0.478 blue:0.682 alpha:1] /*#687aae*/];
-        [subTitleLabel setNumberOfLines:20];
         
         [popupView addSubview:subTitleLabel];
         
@@ -398,8 +409,17 @@ BOOL isBlurSet = YES;
 
     if (pCancelTitle) {
         
-        cancelBtn = [[UIButton alloc] init];
+        if (!cancelBtn) {
+            cancelBtn = [[UIButton alloc] init];
+            [cancelBtn setTitleColor:FlatWhiteDarkColor forState:UIControlStateNormal];
+            [cancelBtn.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:16.0]];
+            [cancelBtn setBackgroundColor:[UIColor colorWithRed:0.91 green:0.184 blue:0.184 alpha:1] /*#e82f2f*/];
+            [cancelBtn addTarget:self action:@selector(pressAlertButton:) forControlEvents:UIControlEventTouchUpInside];
+            [cancelBtn.layer setCornerRadius:6.0];
+            [cancelBtn.layer setMasksToBounds:YES];
+        }
         
+        //Change the frame to expand the whole width of Popup if there's no successBtn
         if (!pSuccessTitle) {
             [cancelBtn setFrame:CGRectMake(8, popupView.frame.size.height - 48, popupView.frame.size.width - 16, 40)];
         }
@@ -408,20 +428,23 @@ BOOL isBlurSet = YES;
         }
         
         [cancelBtn setTitle:pCancelTitle forState:UIControlStateNormal];
-        [cancelBtn setTitleColor:FlatWhiteDarkColor forState:UIControlStateNormal];
-        [cancelBtn.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:16.0]];
-        [cancelBtn setBackgroundColor:[UIColor colorWithRed:0.91 green:0.184 blue:0.184 alpha:1] /*#e82f2f*/];
-        [cancelBtn addTarget:self action:@selector(pressAlertButton:) forControlEvents:UIControlEventTouchUpInside];
-        [cancelBtn.layer setCornerRadius:6.0];
-        [cancelBtn.layer setMasksToBounds:YES];
         
         [popupView addSubview:cancelBtn];
+        
     }
     if (pSuccessTitle) {
         
-        successBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
+        if (!successBtn) {
+            successBtn = [[UIButton alloc] init];
+            [successBtn setTitleColor:FlatWhiteDarkColor forState:UIControlStateNormal];
+            [successBtn.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:16.0]];
+            [successBtn setBackgroundColor:[UIColor colorWithRed:0.408 green:0.478 blue:0.682 alpha:1] /*#687aae*/];
+            [successBtn addTarget:self action:@selector(pressAlertButton:) forControlEvents:UIControlEventTouchUpInside];
+            [successBtn.layer setCornerRadius:6.0];
+            [successBtn.layer setMasksToBounds:YES];
+        }
         
-        
+        //Change the frame to expand the whole width of Popup if there's no cancelBtn
         if (!pCancelTitle) {
             [successBtn setFrame:CGRectMake(8, popupView.frame.size.height - 48, popupView.frame.size.width - 16, 40)];
         }
@@ -430,20 +453,17 @@ BOOL isBlurSet = YES;
         }
         
         [successBtn setTitle:pSuccessTitle forState:UIControlStateNormal];
-        [successBtn setTitleColor:FlatWhiteDarkColor forState:UIControlStateNormal];
-        [successBtn.titleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:16.0]];
-        [successBtn setBackgroundColor:[UIColor colorWithRed:0.408 green:0.478 blue:0.682 alpha:1] /*#687aae*/];
-        [successBtn addTarget:self action:@selector(pressAlertButton:) forControlEvents:UIControlEventTouchUpInside];
-        [successBtn.layer setCornerRadius:6.0];
-        [successBtn.layer setMasksToBounds:YES];
         
         [popupView addSubview:successBtn];
+        
     }
     
     
 }
 
+
 #pragma mark Presentation Methods
+
 
 - (void)showPopup {
     
@@ -474,7 +494,9 @@ BOOL isBlurSet = YES;
     
 }
 
+
 #pragma mark Dismissing Methods
+
 
 - (void)dismissPopup:(PopupButtonType)buttonType {
         
@@ -491,7 +513,9 @@ BOOL isBlurSet = YES;
 
 }
 
+
 #pragma mark Button Methods
+
 
 - (void)pressAlertButton:(id)sender {
     
@@ -528,7 +552,9 @@ BOOL isBlurSet = YES;
     
 }
 
+
 #pragma mark Textfield Getter Methods
+
 
 - (NSMutableDictionary *)createDictionaryForTextfields {
     
@@ -604,7 +630,9 @@ BOOL isBlurSet = YES;
     
 }
 
+
 #pragma mark UITextField Methods
+
 
 - (void)setTextFieldTypeForTextFields:(NSArray *)textFieldTypeArray {
     
@@ -658,7 +686,6 @@ BOOL isBlurSet = YES;
     
     
 }
-
 
 - (void)setKeyboardTypeForTextFields:(NSArray *)keyboardTypeArray {
     
@@ -827,48 +854,45 @@ BOOL isBlurSet = YES;
 }
 
 - (void)setPopupFrameForTextField:(int)num {
-
+    
     currentKeyboardHeight = 216;
     
-    //#warning integrate shit for iphone 4,5,6 screen sizes
-    
-    switch (num) {
-        case 1: {
-            [UIView animateWithDuration:0.2 animations:^{
-                [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight, 300, 300)];
-            }];
-            break;
-        }
-        case 2: {
-            [UIView animateWithDuration:0.2 animations:^{
-                [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight, 300, 300)];
-            }];
-            break;
-        }
-        case 3: {
-            [UIView animateWithDuration:0.2 animations:^{
-                [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight, 300, 300)];
-            }];
-            break;
-        }
-        default: {
-            break;
-        }
+    //Integrate for iPhone 4, 5, 6, 6+ screen sizes
+    if ([UIScreen mainScreen].bounds.size.height == 480) {
+        //If is iPhone4
+        [UIView animateWithDuration:0.2 animations:^{
+            [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight - 70, 300, 300)];
+        }];
+    }
+    else if ([UIScreen mainScreen].bounds.size.height == 568) {
+        //If is iPhone5
+        [UIView animateWithDuration:0.2 animations:^{
+            [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight - 30, 300, 300)];
+        }];
+    }
+    else if ([UIScreen mainScreen].bounds.size.height > 568) {
+        //If is iPhone6, 6+
+        [UIView animateWithDuration:0.2 animations:^{
+            [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight, 300, 300)];
+        }];
     }
     
 }
 
 - (void)dismissKeyboards {
-    
+    //Dismiss all and any keyboards
     [self endEditing:YES];
     
+    //Reset the frame of Popup
     [UIView animateWithDuration:0.2 animations:^{
         [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300)];
     }];
     
 }
 
+
 #pragma mark Keyboard Methods
+
 
 - (void)setKeyboardNotifications {
 
@@ -880,21 +904,25 @@ BOOL isBlurSet = YES;
 }
 
 - (void)keyboardWillShow:(NSNotification*)notification {
-
+    
     NSDictionary *info = [notification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     currentKeyboardHeight = kbSize.height;
-
+    
 }
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
 #pragma mark Transition Methods
+
 
 - (void)configureIncomingAnimationFor:(PopupIncomingTransitionType)trannyType {
 
+    CGRect mainRect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
+    
     switch (trannyType) {
         case PopupIncomingTransitionTypeBounceFromCenter: {
 
@@ -918,9 +946,7 @@ BOOL isBlurSet = YES;
             
             [UIView animateWithDuration:0.125 animations:^{
                 
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
-                
-                [popupView setFrame:rect];
+                [popupView setFrame:mainRect];
 
             } completion:^(BOOL finished) {
                 if ([self.delegate respondsToSelector:@selector(popupDidAppear:)]) {
@@ -936,10 +962,8 @@ BOOL isBlurSet = YES;
             [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, -300, 300, 300)];
             
             [UIView animateWithDuration:0.125 animations:^{
-                
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
-                
-                [popupView setFrame:rect];
+
+                [popupView setFrame:mainRect];
                 
             } completion:^(BOOL finished) {
                 if ([self.delegate respondsToSelector:@selector(popupDidAppear:)]) {
@@ -951,13 +975,11 @@ BOOL isBlurSet = YES;
         }
         case PopupIncomingTransitionTypeSlideFromBottom: {
             
-            [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, 300, 300, 300)];
+            [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height+300, 300, 300)];
             
             [UIView animateWithDuration:0.125 animations:^{
                 
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
-                
-                [popupView setFrame:rect];
+                [popupView setFrame:mainRect];
                 
             } completion:^(BOOL finished) {
                 if ([self.delegate respondsToSelector:@selector(popupDidAppear:)]) {
@@ -973,9 +995,7 @@ BOOL isBlurSet = YES;
             
             [UIView animateWithDuration:0.125 animations:^{
                 
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
-                
-                [popupView setFrame:rect];
+                [popupView setFrame:mainRect];
                 
             } completion:^(BOOL finished) {
                 if ([self.delegate respondsToSelector:@selector(popupDidAppear:)]) {
@@ -1024,9 +1044,7 @@ BOOL isBlurSet = YES;
             
             [UIView animateWithDuration:0.4 delay:0.0 usingSpringWithDamping:0.55 initialSpringVelocity:0.9 options:UIViewAnimationOptionTransitionNone animations:^{
                 
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
-                
-                [popupView setFrame:rect];
+                [popupView setFrame:mainRect];
                 
             } completion:^(BOOL finished) {
                 if ([self.delegate respondsToSelector:@selector(popupDidAppear:)]) {
@@ -1078,6 +1096,7 @@ BOOL isBlurSet = YES;
 
 - (void)configureOutgoingAnimationFor:(PopupOutgoingTransitionType)trannyType withButtonType:(PopupButtonType)buttonType {
     
+    //Make the blur/background fade away
     [UIView animateWithDuration:0.175 animations:^{
         [backgroundView setAlpha:0.0];
     }];
@@ -1103,9 +1122,9 @@ BOOL isBlurSet = YES;
         }
         case PopupOutgoingTransitionTypeSlideToLeft: {
             
+            CGRect rect = CGRectMake(-300, mainScreen.bounds.size.height/2 - 150, 300, 300);
+
             [UIView animateWithDuration:0.125 animations:^{
-                
-                CGRect rect = CGRectMake(-300, mainScreen.bounds.size.height/2 - 150, 300, 300);
                 
                 [popupView setFrame:rect];
                 
@@ -1116,10 +1135,10 @@ BOOL isBlurSet = YES;
             break;
         }
         case PopupOutgoingTransitionTypeSlideToTop: {
-            
+
+            CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, -300, 300, 300);
+
             [UIView animateWithDuration:0.125 animations:^{
-                
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, -300, 300, 300);
                 
                 [popupView setFrame:rect];
                 
@@ -1131,10 +1150,10 @@ BOOL isBlurSet = YES;
             break;
         }
         case PopupOutgoingTransitionTypeSlideToBottom: {
-            
+
+            CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height + 300, 300, 300);
+
             [UIView animateWithDuration:0.125 animations:^{
-                
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height + 300, 300, 300);
                 
                 [popupView setFrame:rect];
                 
@@ -1146,10 +1165,10 @@ BOOL isBlurSet = YES;
             break;
         }
         case PopupOutgoingTransitionTypeSlideToRight: {
-            
+
+            CGRect rect = CGRectMake(mainScreen.bounds.size.width + 300, mainScreen.bounds.size.height/2 - 150, 300, 300);
+
             [UIView animateWithDuration:0.125 animations:^{
-                
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width + 300, mainScreen.bounds.size.height/2 - 150, 300, 300);
                 
                 [popupView setFrame:rect];
                 
@@ -1175,8 +1194,10 @@ BOOL isBlurSet = YES;
         case PopupOutgoingTransitionTypeDisappearCenter: {
             
             [UIView animateWithDuration:0.25 animations:^{
+                
                 popupView.transform = CGAffineTransformMakeScale(0.65, 0.65);
                 [popupView setAlpha:0.0];
+                
             } completion:^(BOOL finished) {
                 [self endWithButtonType:buttonType];
             }];
@@ -1185,18 +1206,17 @@ BOOL isBlurSet = YES;
         }
         case PopupOutgoingTransitionTypeFallWithGravity: {
             
+            CGRect initialRect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
+            CGRect endingRect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height + 300, 300, 300);
+
             [UIView animateWithDuration:0.1 delay:0.0 usingSpringWithDamping:0.24 initialSpringVelocity:0.9 options:UIViewAnimationOptionTransitionNone animations:^{
                 
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
-                
-                [popupView setFrame:rect];
+                [popupView setFrame:initialRect];
 
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.35 animations:^{
                     
-                    CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height + 300, 300, 300);
-                    
-                    [popupView setFrame:rect];
+                    [popupView setFrame:endingRect];
 
                 } completion:^(BOOL finished) {
                     [self endWithButtonType:buttonType];
@@ -1257,5 +1277,6 @@ BOOL isBlurSet = YES;
     }
     
 }
+
 
 @end
