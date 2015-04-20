@@ -878,7 +878,7 @@ CGFloat width;
     UIPickerView *picker21 = (UIPickerView *)[self.view viewWithTag:21];
     UIPickerView *picker22 = (UIPickerView *)[self.view viewWithTag:22];
     UIPickerView *picker23 = (UIPickerView *)[self.view viewWithTag:23];
-    
+
     if ([sender tag] == 14) {
         [picker19 setAlpha:1.0];
         [picker20 setAlpha:0.0];
@@ -1102,7 +1102,7 @@ CGFloat width;
 #pragma mark Popup Methods
 
 - (void)showPopper {
-    
+
     if (numFields == 0) {
         popper = [[Popup alloc] initWithTitle:titleText subTitle:subTitleText cancelTitle:cancelText successTitle:successText];
     }
@@ -1138,7 +1138,7 @@ CGFloat width;
     [popper setOutgoingTransition:outgoingType];
     [popper setRoundedCorners:hasRoundedCorners];
     [popper showPopup];
-    
+ 
 }
 
 - (void)popupWillAppear:(Popup *)popup {
@@ -1158,7 +1158,14 @@ CGFloat width;
 }
 
 - (void)popupPressButton:(Popup *)popup buttonType:(PopupButtonType)buttonType {
-    NSLog(@"popupPressButton");
+    
+    if (buttonType == PopupButtonCancel) {
+        NSLog(@"popupPressButton - PopupButtonCancel");
+    }
+    else if (buttonType == PopupButtonSuccess) {
+        NSLog(@"popupPressButton - PopupButtonSuccess");
+    }
+    
 }
 
 - (void)dictionary:(NSMutableDictionary *)dictionary forpopup:(Popup *)popup stringsFromTextFields:(NSArray *)stringArray {

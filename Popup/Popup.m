@@ -303,7 +303,7 @@ BOOL isBlurSet = YES;
                 [subTitleLabel setFrame:CGRectMake(8, titleLabelHeight + 16, popupView.frame.size.width - 16, popupView.frame.size.height - 16 - buttonHeight - (textfieldHeight * 2.75) - (8 * 2.75) - (titleLabelHeight + 16))];
             }
             else if ([pTextFieldPlaceholderArray count] == 3) {
-                [subTitleLabel setFrame:CGRectMake(8, titleLabelHeight + 16, popupView.frame.size.width - 16, popupView.frame.size.height - 16 - buttonHeight - (textfieldHeight * 3) - (8 * 3) - (titleLabelHeight + 16))];
+                [subTitleLabel setFrame:CGRectMake(8, titleLabelHeight + 16, popupView.frame.size.width - 16, popupView.frame.size.height - 16 - buttonHeight - (textfieldHeight * 3.5) - (8 * 3.5) - (titleLabelHeight + 16))];
             }
         }
         
