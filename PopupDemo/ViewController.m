@@ -15,6 +15,10 @@ BOOL secure1;
 BOOL secure2;
 BOOL secure3;
 
+BOOL setKey1;
+BOOL setKey2;
+BOOL setKey3;
+
 int numFields = 0;
 
 CGFloat width;
@@ -89,6 +93,7 @@ CGFloat width;
     [titleField setPlaceholder:@"Title"];
     [titleField setDelegate:self];
     [titleField setTag:1];
+    [titleField setClearsOnBeginEditing:YES];
     [titleField setBorderStyle:UITextBorderStyleRoundedRect];
     [self.view addSubview:titleField];
     
@@ -97,6 +102,7 @@ CGFloat width;
     [subTitleField setPlaceholder:@"SubTitle"];
     [subTitleField setDelegate:self];
     [subTitleField setTag:2];
+    [subTitleField setClearsOnBeginEditing:YES];
     [subTitleField setBorderStyle:UITextBorderStyleRoundedRect];
     [self.view addSubview:subTitleField];
 }
@@ -108,6 +114,7 @@ CGFloat width;
     [successField setPlaceholder:@"Success Title"];
     [successField setDelegate:self];
     [successField setTag:3];
+    [successField setClearsOnBeginEditing:YES];
     [successField setBorderStyle:UITextBorderStyleRoundedRect];
     [self.view addSubview:successField];
     
@@ -116,6 +123,7 @@ CGFloat width;
     [cancelField setPlaceholder:@"Cancel Title"];
     [cancelField setDelegate:self];
     [cancelField setTag:4];
+    [cancelField setClearsOnBeginEditing:YES];
     [cancelField setBorderStyle:UITextBorderStyleRoundedRect];
     [self.view addSubview:cancelField];
 }
@@ -553,6 +561,62 @@ CGFloat width;
     else if (!secure1 && secure2 && secure3) {
         [popper setTextFieldTypeForTextFields:@[@"", @"PASSWORD", @"PASSWORD"]];
     }
+
+}
+
+- (void)figureOutKeyboardType {
+    
+    UIButton *key1 = (UIButton *)[self.view viewWithTag:14];
+    UIButton *key2 = (UIButton *)[self.view viewWithTag:16];
+    UIButton *key3 = (UIButton *)[self.view viewWithTag:18];
+    
+    NSString *k1 = key1.titleLabel.text;
+    NSString *k2 = key2.titleLabel.text;
+    NSString *k3 = key3.titleLabel.text;
+    
+    keyboardTypes = @[@"DEFAULT",
+                      @"ASCIICAPABLE",
+                      @"NUMBERSANDPUNCTUATION",
+                      @"URL",
+                      @"NUMBER",
+                      @"PHONE",
+                      @"NAMEPHONE",
+                      @"EMAIL",
+                      @"DECIMAL",
+                      @"TWITTER",
+                      @"WEBSEARCH"];
+    
+    
+    if (setKey1 && !setKey2 && !setKey3) {
+        [popper setKeyboardTypeForTextFields:@[k1]];
+    }
+    else if (setKey1 && setKey2 && !setKey3) {
+        [popper setKeyboardTypeForTextFields:@[k1, k2]];
+    }
+    else if (setKey1 && setKey2 && setKey3) {
+        [popper setKeyboardTypeForTextFields:@[k1, k2, k3]];
+    }
+    else if (setKey1 && !setKey2 && setKey3) {
+        [popper setKeyboardTypeForTextFields:@[k1, @"", k3]];
+    }
+    else if (!setKey1 && setKey2 && !setKey3) {
+        [popper setKeyboardTypeForTextFields:@[@"", k2]];
+    }
+    else if (!setKey1 && !setKey2 && setKey3) {
+        [popper setKeyboardTypeForTextFields:@[@"", @"", k3]];
+    }
+    else if (!setKey1 && !setKey2 && !setKey3) {
+        //none
+    }
+    else if (setKey1 && !setKey2 && setKey3) {
+        [popper setKeyboardTypeForTextFields:@[k1, @"", k3]];
+    }
+    else if (!setKey1 && setKey2 && setKey3) {
+        [popper setKeyboardTypeForTextFields:@[@"", k2, k3]];
+    }
+
+    
+    
 }
 
 - (void)setShowTextFieldBtns:(int)num {
@@ -613,31 +677,53 @@ CGFloat width;
 }
 
 - (void)setIncoming {
+    [self.view endEditing:YES];
+    
     UIPickerView *picker19 = (UIPickerView *)[self.view viewWithTag:19];
     UIPickerView *picker20 = (UIPickerView *)[self.view viewWithTag:20];
     UIPickerView *picker21 = (UIPickerView *)[self.view viewWithTag:21];
     UIPickerView *picker22 = (UIPickerView *)[self.view viewWithTag:22];
     UIPickerView *picker23 = (UIPickerView *)[self.view viewWithTag:23];
 
-    [picker19 setAlpha:0.0];
-    [picker20 setAlpha:0.0];
-    [picker21 setAlpha:0.0];
-    [picker22 setAlpha:1.0];
-    [picker23 setAlpha:0.0];
+    if ([picker22 alpha] == 1.0) {
+        [picker19 setAlpha:0.0];
+        [picker20 setAlpha:0.0];
+        [picker21 setAlpha:0.0];
+        [picker22 setAlpha:0.0];
+        [picker23 setAlpha:0.0];
+    }
+    else {
+        [picker19 setAlpha:0.0];
+        [picker20 setAlpha:0.0];
+        [picker21 setAlpha:0.0];
+        [picker22 setAlpha:1.0];
+        [picker23 setAlpha:0.0];
+    }
 }
 
 - (void)setOutgoing {
+    [self.view endEditing:YES];
+    
     UIPickerView *picker19 = (UIPickerView *)[self.view viewWithTag:19];
     UIPickerView *picker20 = (UIPickerView *)[self.view viewWithTag:20];
     UIPickerView *picker21 = (UIPickerView *)[self.view viewWithTag:21];
     UIPickerView *picker22 = (UIPickerView *)[self.view viewWithTag:22];
     UIPickerView *picker23 = (UIPickerView *)[self.view viewWithTag:23];
     
-    [picker19 setAlpha:0.0];
-    [picker20 setAlpha:0.0];
-    [picker21 setAlpha:0.0];
-    [picker22 setAlpha:0.0];
-    [picker23 setAlpha:1.0];
+    if ([picker23 alpha] == 1.0) {
+        [picker19 setAlpha:0.0];
+        [picker20 setAlpha:0.0];
+        [picker21 setAlpha:0.0];
+        [picker22 setAlpha:0.0];
+        [picker23 setAlpha:0.0];
+    }
+    else {
+        [picker19 setAlpha:0.0];
+        [picker20 setAlpha:0.0];
+        [picker21 setAlpha:0.0];
+        [picker22 setAlpha:0.0];
+        [picker23 setAlpha:1.0];
+    }
 
 }
 
@@ -785,25 +871,34 @@ CGFloat width;
 }
 
 - (void)setKeyType:(id)sender {
+    [self.view endEditing:YES];
     
     UIPickerView *picker19 = (UIPickerView *)[self.view viewWithTag:19];
     UIPickerView *picker20 = (UIPickerView *)[self.view viewWithTag:20];
     UIPickerView *picker21 = (UIPickerView *)[self.view viewWithTag:21];
+    UIPickerView *picker22 = (UIPickerView *)[self.view viewWithTag:22];
+    UIPickerView *picker23 = (UIPickerView *)[self.view viewWithTag:23];
     
     if ([sender tag] == 14) {
         [picker19 setAlpha:1.0];
         [picker20 setAlpha:0.0];
         [picker21 setAlpha:0.0];
+        [picker22 setAlpha:0.0];
+        [picker23 setAlpha:0.0];
     }
     else if ([sender tag] == 16) {
         [picker19 setAlpha:0.0];
         [picker20 setAlpha:1.0];
         [picker21 setAlpha:0.0];
+        [picker22 setAlpha:0.0];
+        [picker23 setAlpha:0.0];
     }
     else if ([sender tag] == 18) {
         [picker19 setAlpha:0.0];
         [picker20 setAlpha:0.0];
         [picker21 setAlpha:1.0];
+        [picker22 setAlpha:0.0];
+        [picker23 setAlpha:0.0];
     }
 
 }
@@ -825,6 +920,7 @@ CGFloat width;
         return [outgoingTypes count];
     }
     else return 1;
+    
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
@@ -850,12 +946,15 @@ CGFloat width;
     UIButton *outBtn = (UIButton *)[self.view viewWithTag:100];
     
     if ([pickerView tag] == 19) {
+        setKey1 = YES;
         [setOneFieldKeyboardBtn setTitle:keyboardTypes[row] forState:UIControlStateNormal];
     }
     else if ([pickerView tag] == 20) {
+        setKey2 = YES;
         [setTwoFieldKeyboardBtn setTitle:keyboardTypes[row] forState:UIControlStateNormal];
     }
     else if ([pickerView tag] == 21) {
+        setKey3 = YES;
         [setThreeFieldKeyboardBtn setTitle:keyboardTypes[row] forState:UIControlStateNormal];
     }
     else if ([pickerView tag] == 22) {
@@ -960,6 +1059,23 @@ CGFloat width;
     return YES;
 }
 
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+
+    UIPickerView *picker19 = (UIPickerView *)[self.view viewWithTag:19];
+    UIPickerView *picker20 = (UIPickerView *)[self.view viewWithTag:20];
+    UIPickerView *picker21 = (UIPickerView *)[self.view viewWithTag:21];
+    UIPickerView *picker22 = (UIPickerView *)[self.view viewWithTag:22];
+    UIPickerView *picker23 = (UIPickerView *)[self.view viewWithTag:23];
+    
+    [picker19 setAlpha:0.0];
+    [picker20 setAlpha:0.0];
+    [picker21 setAlpha:0.0];
+    [picker22 setAlpha:0.0];
+    [picker23 setAlpha:0.0];
+    
+    return YES;
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     
@@ -1014,6 +1130,7 @@ CGFloat width;
     
     [self figureOutSecure];
     [self figureOutTransitions];
+    [self figureOutKeyboardType];
     
     [popper setDelegate:self];
     [popper setBackgroundBlurType:blurType];
@@ -1049,6 +1166,9 @@ CGFloat width;
     NSLog(@"Dictionary from textfields: %@", dictionary);
     NSLog(@"Array from textfields: %@", stringArray);
 
+    //NSString *textFromBox1 = [stringArray objectAtIndex:0];
+    //NSString *textFromBox2 = [stringArray objectAtIndex:1];
+    //NSString *textFromBox3 = [stringArray objectAtIndex:2];
 }
 
 @end

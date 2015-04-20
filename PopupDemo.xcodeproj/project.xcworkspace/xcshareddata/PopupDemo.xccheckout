@@ -7,17 +7,17 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>188E57F9-03A9-4A3B-AF90-4735D3927258</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>PopupDemo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>1EB98571E77C13D07D81CAC6BD04D5A38E972A85</key>
+		<key>82B0830E976C52A10771FCC5BCC60734D712A493</key>
 		<string>https://github.com/miscavage/Popup.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>PopupDemo.xcodeproj/project.xcworkspace</string>
+	<string>PopupDemo.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>1EB98571E77C13D07D81CAC6BD04D5A38E972A85</key>
+		<key>82B0830E976C52A10771FCC5BCC60734D712A493</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
@@ -25,14 +25,14 @@
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>1EB98571E77C13D07D81CAC6BD04D5A38E972A85</string>
+	<string>82B0830E976C52A10771FCC5BCC60734D712A493</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>1EB98571E77C13D07D81CAC6BD04D5A38E972A85</string>
+			<string>82B0830E976C52A10771FCC5BCC60734D712A493</string>
 			<key>IDESourceControlWCCName</key>
 			<string>PopupDemo</string>
 		</dict>
