@@ -3,9 +3,9 @@
 ## • Screenshots and Gifs
 
   <img align="left" src="http://i.imgur.com/yRIHacH.gif" alt="SS1" width="240" height="427"/>
-  <img align="center" src="http://i.imgur.com/G618OgF.png" alt="SS2" width="240" height="427"/>
+  <img align="center" src="http://i.imgur.com/nC8DOEx.png" alt="SS2" width="240" height="427"/>
   <img align="right" src="http://i.imgur.com/O8ZooU4.png" alt="SS3" width="240" height="427"/>
-
+ 
 ## • Installation
 
 Just drag and drop the "Popup" folder into your project, and make sure you check the "Copy items into destination group's folder" box
