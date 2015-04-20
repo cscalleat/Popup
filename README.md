@@ -2,9 +2,9 @@
 
 ## • Screenshots and Gifs
 
-  <img align="left" src="http://i.imgur.com/yRIHacH.gif" alt="SS1" width="260" height="462"/>
-  <img align="center" src="http://i.imgur.com/G618OgF.png" alt="SS2" width="260" height="462"/>
-  <img align="right" src="http://i.imgur.com/O8ZooU4.png" alt="SS3" width="260" height="462"/>
+  <img align="left" src="http://i.imgur.com/yRIHacH.gif" alt="SS1" width="240" height="427"/>
+  <img align="center" src="http://i.imgur.com/G618OgF.png" alt="SS2" width="240" height="427"/>
+  <img align="right" src="http://i.imgur.com/O8ZooU4.png" alt="SS3" width="240" height="427"/>
 
 ## • Installation
 
