@@ -250,6 +250,15 @@ BOOL isBlurSet = YES;
     }
 }
 
+- (void)setOverallKeyboardAppearance:(UIKeyboardAppearance)keyboardAppearance {
+ 
+    for (int i = 0; i < [pTextFieldArray count]; i++) {
+        UITextField *textField = pTextFieldArray[i];
+        [textField setKeyboardAppearance:keyboardAppearance];
+    }
+    
+}
+
 #pragma mark Setup Methods
 
 - (void)setupTitle {
@@ -276,17 +285,34 @@ BOOL isBlurSet = YES;
     if (pSubTitle) {
         
         int titleLabelHeight = titleLabel.frame.size.height;
-        
+
         if (!subTitleLabel) {
             subTitleLabel = [[UILabel alloc] init];
         }
+        if ([pTextFieldPlaceholderArray count] == 0) {
+            [subTitleLabel setFrame:CGRectMake(8, titleLabelHeight + 16, popupView.frame.size.width - 16, popupView.frame.size.height - 16 - 40 - (titleLabelHeight + 16))];
+        }
+        else {
+            int textfieldHeight = 28;
+            int buttonHeight = 40;
+
+            if ([pTextFieldPlaceholderArray count] == 1) {
+                [subTitleLabel setFrame:CGRectMake(8, titleLabelHeight + 16, popupView.frame.size.width - 16, popupView.frame.size.height - 16 - buttonHeight - (textfieldHeight * 2.65) - (8 * 2.65) - (titleLabelHeight + 16))];
+            }
+            else if ([pTextFieldPlaceholderArray count] == 2) {
+                [subTitleLabel setFrame:CGRectMake(8, titleLabelHeight + 16, popupView.frame.size.width - 16, popupView.frame.size.height - 16 - buttonHeight - (textfieldHeight * 2.75) - (8 * 2.75) - (titleLabelHeight + 16))];
+            }
+            else if ([pTextFieldPlaceholderArray count] == 3) {
+                [subTitleLabel setFrame:CGRectMake(8, titleLabelHeight + 16, popupView.frame.size.width - 16, popupView.frame.size.height - 16 - buttonHeight - (textfieldHeight * 3) - (8 * 3) - (titleLabelHeight + 16))];
+            }
+        }
         
-        [subTitleLabel setFrame:CGRectMake(8, titleLabelHeight + 16, popupView.frame.size.width - 16, 68)];
         [subTitleLabel setText:pSubTitle];
         [subTitleLabel setFont:[UIFont fontWithName:@"HelveticaNeue" size:kPopupSubTitleFontSize]];
         [subTitleLabel setAdjustsFontSizeToFitWidth:YES];
         [subTitleLabel setTextAlignment:NSTextAlignmentCenter];
         [subTitleLabel setTextColor:[UIColor colorWithRed:0.408 green:0.478 blue:0.682 alpha:1] /*#687aae*/];
+        [subTitleLabel setNumberOfLines:20];
         
         [popupView addSubview:subTitleLabel];
         
@@ -367,7 +393,6 @@ BOOL isBlurSet = YES;
     }
     
 }
-
 
 - (void)setupButtons {
 
@@ -581,7 +606,6 @@ BOOL isBlurSet = YES;
 
 #pragma mark UITextField Methods
 
-
 - (void)setTextFieldTypeForTextFields:(NSArray *)textFieldTypeArray {
     
     NSArray *canBeArray = @[@"",
@@ -747,7 +771,7 @@ BOOL isBlurSet = YES;
     [textField setBorderStyle:UITextBorderStyleNone];
     [textField setDelegate:self];
     [textField setFont:[UIFont fontWithName:@"HelveticaNeue" size:14.0f]];
-    [textField setTextColor:[UIColor whiteColor]];
+    [textField setTextColor:[UIColor colorWithRed:0.0 green:0.0 blue:0.0 alpha:0.9]];
     [textField setBackgroundColor:[UIColor colorWithWhite:0.9 alpha:1.0]];
     [textField setSpellCheckingType:UITextSpellCheckingTypeNo];
     [textField setAutocorrectionType:UITextAutocorrectionTypeNo];
@@ -806,7 +830,7 @@ BOOL isBlurSet = YES;
 
     currentKeyboardHeight = 216;
     
-#warning integrate shit for iphone 4,5,6 screen sizes
+    //#warning integrate shit for iphone 4,5,6 screen sizes
     
     switch (num) {
         case 1: {
@@ -870,17 +894,15 @@ BOOL isBlurSet = YES;
 #pragma mark Transition Methods
 
 - (void)configureIncomingAnimationFor:(PopupIncomingTransitionType)trannyType {
-    NSLog(@"type");
+
     switch (trannyType) {
         case PopupIncomingTransitionTypeBounceFromCenter: {
-            NSLog(@"pop");
-            [popupView setFrame:CGRectMake(self.frame.size.width/2 - 0, self.frame.size.height/2 - 0, 0, 0)];
-            
+
+            popupView.transform = CGAffineTransformMakeScale(0.4, 0.4);
+
             [UIView animateWithDuration:0.35 delay:0.0 usingSpringWithDamping:0.55 initialSpringVelocity:1.0 options:UIViewAnimationOptionTransitionNone animations:^{
-                
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
-                
-                [popupView setFrame:rect];
+
+                popupView.transform = CGAffineTransformIdentity;
                 
             } completion:^(BOOL finished) {
                 if ([self.delegate respondsToSelector:@selector(popupDidAppear:)]) {
@@ -905,6 +927,7 @@ BOOL isBlurSet = YES;
                     [self.delegate popupDidAppear:self];
                 }
             }];
+            
             
             break;
         }
@@ -964,14 +987,11 @@ BOOL isBlurSet = YES;
         }
         case PopupIncomingTransitionTypeEaseFromCenter: {
             
-            [popupView setFrame:CGRectMake(self.frame.size.width/2 - 120, self.frame.size.height/2 - 120, 240, 240)];
             [popupView setAlpha:0.0];
+            popupView.transform = CGAffineTransformMakeScale(0.75, 0.75);
             
             [UIView animateWithDuration:0.25 animations:^{
-                
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
-                
-                [popupView setFrame:rect];
+                popupView.transform = CGAffineTransformIdentity;
                 [popupView setAlpha:1.0];
                 
             } completion:^(BOOL finished) {
@@ -979,7 +999,6 @@ BOOL isBlurSet = YES;
                     [self.delegate popupDidAppear:self];
                 }
             }];
-
             
             break;
         }
@@ -1034,15 +1053,12 @@ BOOL isBlurSet = YES;
             break;
         }
         case PopupIncomingTransitionTypeShrinkAppear: {
-            
-            [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 160, mainScreen.bounds.size.height/2 - 160, 320, 320)];
-            [popupView setAlpha:0.0];
 
+            [popupView setAlpha:0.0];
+            popupView.transform = CGAffineTransformMakeScale(1.25, 1.25);
+            
             [UIView animateWithDuration:0.25 animations:^{
-                
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300);
-                
-                [popupView setFrame:rect];
+                popupView.transform = CGAffineTransformIdentity;
                 [popupView setAlpha:1.0];
                 
             } completion:^(BOOL finished) {
@@ -1068,17 +1084,15 @@ BOOL isBlurSet = YES;
 
     switch (trannyType) {
         case PopupOutgoingTransitionTypeBounceFromCenter: {
-            
+
             [UIView animateWithDuration:0.35 delay:0.0 usingSpringWithDamping:0.55 initialSpringVelocity:1.0 options:UIViewAnimationOptionTransitionNone animations:^{
                 
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 160, mainScreen.bounds.size.height/2 - 160, 320, 320);
-                
-                [popupView setFrame:rect];
+                popupView.transform = CGAffineTransformMakeScale(1.25, 1.25);
                 
             } completion:^(BOOL finished) {
-                [UIView animateWithDuration:0.35 delay:0.0 usingSpringWithDamping:0.55 initialSpringVelocity:1.0 options:UIViewAnimationOptionTransitionNone animations:^{
+                [UIView animateWithDuration:0.35 animations:^{
                     
-                    [popupView setFrame:CGRectMake(self.frame.size.width/2, self.frame.size.height/2, 0, 0)];
+                    popupView.transform = CGAffineTransformMakeScale(0.75, 0.75);
                     
                 } completion:^(BOOL finished) {
                     [self endWithButtonType:buttonType];
@@ -1149,9 +1163,7 @@ BOOL isBlurSet = YES;
             
             [UIView animateWithDuration:0.2 animations:^{
                 
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 80, mainScreen.bounds.size.height/2 - 80, 160, 160);
-                
-                [popupView setFrame:rect];
+                popupView.transform = CGAffineTransformMakeScale(0.75, 0.75);
                 [popupView setAlpha:0.0];
                 
             } completion:^(BOOL finished) {
@@ -1163,12 +1175,8 @@ BOOL isBlurSet = YES;
         case PopupOutgoingTransitionTypeDisappearCenter: {
             
             [UIView animateWithDuration:0.25 animations:^{
-                
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 140, mainScreen.bounds.size.height/2 - 140, 280, 280);
-                
-                [popupView setFrame:rect];
+                popupView.transform = CGAffineTransformMakeScale(0.65, 0.65);
                 [popupView setAlpha:0.0];
-                
             } completion:^(BOOL finished) {
                 [self endWithButtonType:buttonType];
             }];
@@ -1213,9 +1221,7 @@ BOOL isBlurSet = YES;
             
             [UIView animateWithDuration:0.25 animations:^{
                 
-                CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 160, mainScreen.bounds.size.height/2 - 160, 320, 320);
-                
-                [popupView setFrame:rect];
+                popupView.transform = CGAffineTransformMakeScale(1.25, 1.25);
                 [popupView setAlpha:0.0];
                 
             } completion:^(BOOL finished) {

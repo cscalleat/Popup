@@ -102,10 +102,9 @@ typedef void (^blocky)(void);
 - (void)showPopup;
 - (void)dismissPopup:(PopupButtonType)buttonType;
 
-
+- (void)setOverallKeyboardAppearance:(UIKeyboardAppearance)keyboardAppearance;
 - (void)setKeyboardTypeForTextFields:(NSArray *)keyboardTypeArray;
 - (void)setTextFieldTypeForTextFields:(NSArray *)textFieldTypeArray;
-
 
 @property (nonatomic, assign) BOOL roundedCorners;
 
