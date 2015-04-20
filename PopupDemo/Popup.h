@@ -26,7 +26,7 @@ typedef NS_ENUM(NSInteger, PopupBackGroundBlurType) {
 };
 
 typedef NS_ENUM(NSUInteger, PopupIncomingTransitionType) {
-    PopupIncomingTransitionTypeBounceFromCenter = 0,
+    PopupIncomingTransitionTypeBounceFromCenter = 1,
     PopupIncomingTransitionTypeSlideFromLeft,
     PopupIncomingTransitionTypeSlideFromTop,
     PopupIncomingTransitionTypeSlideFromBottom,
@@ -39,7 +39,7 @@ typedef NS_ENUM(NSUInteger, PopupIncomingTransitionType) {
 };
 
 typedef NS_ENUM(NSUInteger, PopupOutgoingTransitionType) {
-    PopupOutgoingTransitionTypeBounceFromCenter = 0,
+    PopupOutgoingTransitionTypeBounceFromCenter = 1,
     PopupOutgoingTransitionTypeSlideToLeft,
     PopupOutgoingTransitionTypeSlideToTop,
     PopupOutgoingTransitionTypeSlideToBottom,

@@ -1085,12 +1085,12 @@ BOOL isBlurSet = YES;
     switch (trannyType) {
         case PopupOutgoingTransitionTypeBounceFromCenter: {
 
-            [UIView animateWithDuration:0.35 delay:0.0 usingSpringWithDamping:0.55 initialSpringVelocity:1.0 options:UIViewAnimationOptionTransitionNone animations:^{
+            [UIView animateWithDuration:0.1 delay:0.0 usingSpringWithDamping:0.55 initialSpringVelocity:1.0 options:UIViewAnimationOptionTransitionNone animations:^{
                 
-                popupView.transform = CGAffineTransformMakeScale(1.25, 1.25);
+                popupView.transform = CGAffineTransformMakeScale(1.15, 1.15);
                 
             } completion:^(BOOL finished) {
-                [UIView animateWithDuration:0.35 animations:^{
+                [UIView animateWithDuration:0.1 animations:^{
                     
                     popupView.transform = CGAffineTransformMakeScale(0.75, 0.75);
                     
