@@ -109,28 +109,28 @@ The example below will set all keyboards to have a `UIKeyboardAppearanceDark`.
 ###### - Popup colors
 You can pretty much set every color in Popup: Background, border color text labels, even button titles and button backgrounds.
 ```objective-c
-[popper setBackgroundColor:[UIColor whiteColor]];
-[popper setBorderColor:[UIColor blackColor]];
-[popper setTitleColor:[UIColor darkTextColor]];
-[popper setSubTitleColor:[UIColor lightTextColor]];
-[popper setSuccessBtnColor:[UIColor blueColor]];
-[popper setSuccessTitleColor:[UIColor whiteColor]];
-[popper setCancelBtnColor:[UIColor redColor]];
-[popper setCancelTitleColor:[UIColor whiteColor]];
+[popup setBackgroundColor:[UIColor whiteColor]];
+[popup setBorderColor:[UIColor blackColor]];
+[popup setTitleColor:[UIColor darkTextColor]];
+[popup setSubTitleColor:[UIColor lightTextColor]];
+[popup setSuccessBtnColor:[UIColor blueColor]];
+[popup setSuccessTitleColor:[UIColor whiteColor]];
+[popup setCancelBtnColor:[UIColor redColor]];
+[popup setCancelTitleColor:[UIColor whiteColor]];
 ```
 
 ###### - Background Blurs
 Background blurs allow Popup to be viewed unobtrusively, disregarding the background content. Popup contains 4 background blur types: `PopupBackGroundBlurTypeDark, PopupBackGroundBlurTypeLight, PopupBackGroundBlurTypeExtraLight, PopupBackGroundBlurTypeNone` 
 
 ```objective-c
-[popup setBackgroundBlurType: PopupBackGroundBlurTypeDark];
+[popup setBackgroundBlurType:PopupBackGroundBlurTypeDark];
 ```
 
 ###### - Popup Corners
 You can set if your Popup has rounded corners or not.
 
 ```objective-c
-[popper setRoundedCorners:hasRoundedCorners];
+[popup setRoundedCorners:YES];
 ```
 
 ## • Setting Incoming and Outgoing Transitions
@@ -139,7 +139,7 @@ You can set if your Popup has rounded corners or not.
 Popup has 10 incoming transition types that can be used to add an animation while presenting your Popup.
 
 ```objective-c
-[popup setIncomingTransition: PopupIncomingTransitionTypeBounceFromCenter];
+[popup setIncomingTransition:PopupIncomingTransitionTypeBounceFromCenter];
 ```
 
 ###### - Outgoing Transitions
