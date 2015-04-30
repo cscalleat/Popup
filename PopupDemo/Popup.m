@@ -22,8 +22,7 @@ CGFloat popupDimension = 300.0f;
 
 BOOL isBlurSet = YES;
 
-
-@interface Popup () <UITextFieldDelegate, UIGestureRecognizerDelegate> {
+@interface Popup () <UITextFieldDelegate, UIGestureRecognizerDelegate, UIScrollViewDelegate /*For swiping to dimiss*/> {
     
     UIView *backgroundView;
     UIView *popupView;
@@ -266,6 +265,27 @@ BOOL isBlurSet = YES;
     
 }
 
+- (void)setTapBackgroundToDismiss:(BOOL)tapBackgroundToDismiss {
+
+    if (tapBackgroundToDismiss) {
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissPopup:)];
+        [tap setNumberOfTapsRequired:1];
+        [backgroundView addGestureRecognizer:tap];
+    }
+    
+}
+
+- (void)setSwipeToDismiss:(BOOL)swipeToDismiss {
+
+    if (swipeToDismiss) {
+        UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panFired:)];
+        [pan setDelegate:self];
+        [pan setMinimumNumberOfTouches:1];
+        [pan setMaximumNumberOfTouches:1];
+        [popupView addGestureRecognizer:pan];
+    }
+    
+}
 
 #pragma mark Setup Methods
 
@@ -326,7 +346,6 @@ BOOL isBlurSet = YES;
         [subTitleLabel setText:pSubTitle];
         
         [popupView addSubview:subTitleLabel];
-        
     }
     
 }
@@ -499,7 +518,12 @@ BOOL isBlurSet = YES;
 
 
 - (void)dismissPopup:(PopupButtonType)buttonType {
-        
+    
+    if (!buttonType) {
+        //For tapping and swiping to dismiss
+        buttonType = PopupButtonCancel;
+    }
+    
     if (self.delegate && [self.delegate respondsToSelector:@selector(popupWilldisappear:buttonType:)] ) {
         [self.delegate popupWilldisappear:self buttonType:buttonType];
     }
@@ -551,6 +575,95 @@ BOOL isBlurSet = YES;
     [self dismissPopup:buttonType];
     
 }
+
+
+#pragma mark UIPanGestureRecognizer Methods
+
+- (void)panFired:(id)sender {
+    
+    //Make sure this delegate method only gets called once
+    static int i = 1;
+    if (i == 1) {
+        if (self.delegate && [self.delegate respondsToSelector:@selector(popupWilldisappear:buttonType:)] ) {
+            [self.delegate popupWilldisappear:self buttonType:PopupButtonCancel];
+            i = 0;
+            NSLog(@"-----");
+        }
+    }
+    
+    UIPanGestureRecognizer *panRecog = (UIPanGestureRecognizer *)sender;
+    CGPoint vel = [panRecog velocityInView:popupView];
+    
+    UIView *recogView = [panRecog view];
+    
+    CGPoint translation = [panRecog translationInView:popupView];
+    CGFloat curY = popupView.frame.origin.y;
+    
+    [self endEditing:YES];
+    
+    if (panRecog.state == UIGestureRecognizerStateChanged) {
+        //drag view vertially
+        CGRect frame = popupView.frame;
+        frame.origin.y = curY + translation.y;
+        recogView.frame = frame;
+        [panRecog setTranslation:CGPointMake(0.0f, 0.0f) inView:popupView];
+        
+    }
+    else if (panRecog.state == UIGestureRecognizerStateEnded) {
+        
+        CGFloat finalX = popupView.frame.origin.x;
+        CGFloat finalY = 50.0f;
+        CGFloat curY = popupView.frame.origin.y;
+        
+        CGFloat distance = curY - finalY;
+        
+        //Normalize velocity as per docs
+        //Multiply by -1 in this case since final desitination y < curY
+        //and recog's y velocity is negative when draggin up
+        //(therefore also works when released when dragging down)
+        CGFloat springVelocity = -1.0f * vel.y / distance;
+        
+        //If the springVelocity is really slow, speed it up a bit
+        if (springVelocity > 1.5f) {
+            springVelocity = -1.5f;
+        }
+        
+        NSLog(@"cur: %f/tfin: %f", curY, finalY);
+        NSLog(@"num: %f", springVelocity);
+        
+        [UIView animateWithDuration:springVelocity delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
+            
+            CGRect frame = popupView.frame;
+            frame.origin.x = finalX;
+            frame.origin.y = finalY;
+            popupView.frame = frame;
+            
+            [backgroundView setAlpha:0.0];
+            if (curY > 115.1) {
+                NSLog(@"up");
+                [UIView animateWithDuration:0.1 animations:^{
+                    popupView.frame = CGRectMake(30, 600, 300, 300);
+                } completion:^(BOOL finished) {
+                    popupView.alpha = 0.0;
+                }];
+            }
+            else {
+                NSLog(@"down");
+                [UIView animateWithDuration:0.1 animations:^{
+                    popupView.frame = CGRectMake(30, -400, 300, 300);
+                } completion:^(BOOL finished) {
+                    popupView.alpha = 0.0;
+                }];
+            }
+            
+        } completion:^(BOOL finished) {
+            [self endWithButtonType:PopupButtonCancel];
+        }];
+        
+        
+    }
+}
+
 
 
 #pragma mark Textfield Getter Methods
@@ -929,7 +1042,6 @@ BOOL isBlurSet = YES;
             popupView.transform = CGAffineTransformMakeScale(0.4, 0.4);
 
             [UIView animateWithDuration:0.35 delay:0.0 usingSpringWithDamping:0.55 initialSpringVelocity:1.0 options:UIViewAnimationOptionTransitionNone animations:^{
-
                 popupView.transform = CGAffineTransformIdentity;
                 
             } completion:^(BOOL finished) {
@@ -945,7 +1057,6 @@ BOOL isBlurSet = YES;
             [popupView setFrame:CGRectMake(-300, mainScreen.bounds.size.height/2 - 150, 300, 300)];
             
             [UIView animateWithDuration:0.125 animations:^{
-                
                 [popupView setFrame:mainRect];
 
             } completion:^(BOOL finished) {
@@ -962,7 +1073,6 @@ BOOL isBlurSet = YES;
             [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, -300, 300, 300)];
             
             [UIView animateWithDuration:0.125 animations:^{
-
                 [popupView setFrame:mainRect];
                 
             } completion:^(BOOL finished) {
@@ -978,7 +1088,6 @@ BOOL isBlurSet = YES;
             [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height+300, 300, 300)];
             
             [UIView animateWithDuration:0.125 animations:^{
-                
                 [popupView setFrame:mainRect];
                 
             } completion:^(BOOL finished) {
@@ -994,7 +1103,6 @@ BOOL isBlurSet = YES;
             [popupView setFrame:CGRectMake(mainScreen.bounds.size.width + 300, mainScreen.bounds.size.height/2 - 150, 300, 300)];
             
             [UIView animateWithDuration:0.125 animations:^{
-                
                 [popupView setFrame:mainRect];
                 
             } completion:^(BOOL finished) {
@@ -1027,7 +1135,6 @@ BOOL isBlurSet = YES;
             [popupView setAlpha:0.0];
             
             [UIView animateWithDuration:0.05 animations:^{
-                
                 [popupView setAlpha:1.0];
                 
             } completion:^(BOOL finished) {
@@ -1043,7 +1150,6 @@ BOOL isBlurSet = YES;
             [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, -300, 300, 300)];
             
             [UIView animateWithDuration:0.4 delay:0.0 usingSpringWithDamping:0.55 initialSpringVelocity:0.9 options:UIViewAnimationOptionTransitionNone animations:^{
-                
                 [popupView setFrame:mainRect];
                 
             } completion:^(BOOL finished) {
@@ -1058,8 +1164,7 @@ BOOL isBlurSet = YES;
             
             [popupView setAlpha:0.0];
             
-            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-
+            [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^ {
                 [popupView setAlpha:1.0];
 
             } completion:^(BOOL finished) {
@@ -1105,7 +1210,6 @@ BOOL isBlurSet = YES;
         case PopupOutgoingTransitionTypeBounceFromCenter: {
 
             [UIView animateWithDuration:0.1 delay:0.0 usingSpringWithDamping:0.55 initialSpringVelocity:1.0 options:UIViewAnimationOptionTransitionNone animations:^{
-                
                 popupView.transform = CGAffineTransformMakeScale(1.15, 1.15);
                 
             } completion:^(BOOL finished) {
@@ -1125,7 +1229,6 @@ BOOL isBlurSet = YES;
             CGRect rect = CGRectMake(-300, mainScreen.bounds.size.height/2 - 150, 300, 300);
 
             [UIView animateWithDuration:0.125 animations:^{
-                
                 [popupView setFrame:rect];
                 
             } completion:^(BOOL finished) {
@@ -1139,7 +1242,6 @@ BOOL isBlurSet = YES;
             CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, -300, 300, 300);
 
             [UIView animateWithDuration:0.125 animations:^{
-                
                 [popupView setFrame:rect];
                 
             } completion:^(BOOL finished) {
@@ -1154,7 +1256,6 @@ BOOL isBlurSet = YES;
             CGRect rect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height + 300, 300, 300);
 
             [UIView animateWithDuration:0.125 animations:^{
-                
                 [popupView setFrame:rect];
                 
             } completion:^(BOOL finished) {
@@ -1169,7 +1270,6 @@ BOOL isBlurSet = YES;
             CGRect rect = CGRectMake(mainScreen.bounds.size.width + 300, mainScreen.bounds.size.height/2 - 150, 300, 300);
 
             [UIView animateWithDuration:0.125 animations:^{
-                
                 [popupView setFrame:rect];
                 
             } completion:^(BOOL finished) {
@@ -1181,7 +1281,6 @@ BOOL isBlurSet = YES;
         case PopupOutgoingTransitionTypeEaseToCenter: {
             
             [UIView animateWithDuration:0.2 animations:^{
-                
                 popupView.transform = CGAffineTransformMakeScale(0.75, 0.75);
                 [popupView setAlpha:0.0];
                 
@@ -1194,7 +1293,6 @@ BOOL isBlurSet = YES;
         case PopupOutgoingTransitionTypeDisappearCenter: {
             
             [UIView animateWithDuration:0.25 animations:^{
-                
                 popupView.transform = CGAffineTransformMakeScale(0.65, 0.65);
                 [popupView setAlpha:0.0];
                 
@@ -1210,12 +1308,10 @@ BOOL isBlurSet = YES;
             CGRect endingRect = CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height + 300, 300, 300);
 
             [UIView animateWithDuration:0.1 delay:0.0 usingSpringWithDamping:0.24 initialSpringVelocity:0.9 options:UIViewAnimationOptionTransitionNone animations:^{
-                
                 [popupView setFrame:initialRect];
 
             } completion:^(BOOL finished) {
                 [UIView animateWithDuration:0.35 animations:^{
-                    
                     [popupView setFrame:endingRect];
 
                 } completion:^(BOOL finished) {
@@ -1228,7 +1324,6 @@ BOOL isBlurSet = YES;
         case PopupOutgoingTransitionTypeGhostDisappear: {
             
             [UIView animateWithDuration:0.5 delay:0.0 options:UIViewAnimationOptionCurveLinear animations:^{
-                
                 [popupView setAlpha:0.0];
                 
             } completion:^(BOOL finished) {
@@ -1240,7 +1335,6 @@ BOOL isBlurSet = YES;
         case PopupOutgoingTransitionTypeGrowDisappear: {
             
             [UIView animateWithDuration:0.25 animations:^{
-                
                 popupView.transform = CGAffineTransformMakeScale(1.25, 1.25);
                 [popupView setAlpha:0.0];
                 
@@ -1254,7 +1348,6 @@ BOOL isBlurSet = YES;
             break;
         }
     }
-    
     
 }
 
@@ -1277,6 +1370,5 @@ BOOL isBlurSet = YES;
     }
     
 }
-
 
 @end

@@ -125,6 +125,14 @@ typedef void (^blocky)(void);
 //Does your Popup have rounded corners or doesn't it?
 @property (nonatomic, assign) BOOL roundedCorners;
 
+//Tap the background of Popup to dismiss
+//Returns PopupButtonCancel
+//Automatically set to NO
+@property (nonatomic, assign) BOOL tapBackgroundToDismiss;
+
+//Swipe to dismiss Popup just like swiping to dismiss photos in Facebook app
+//Automatically set to NO
+@property (nonatomic, assign) BOOL swipeToDismiss;
 
 @end
 
