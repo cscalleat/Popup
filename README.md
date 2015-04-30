@@ -149,6 +149,25 @@ Popup has 10 outgoing transition types that can be used to add an animation whil
 [popup setOutgoingTransition:PopupOutgoingTransitionTypeBounceFromCenter];
 ```
 
+###### - Tap To Dismiss
+Tap the background of Popup to dismiss it. If you've already set a `PopupOutgoingTransitionType` it'll still trigger when you tap the background.  
+By tapping the background, you are dismissing Popup which is actually just cancelling it. This means that all delegate methods that return either a "Success" or a "Cancel" will return a "Cancel".
+This is automatically set to NO.
+
+```objective-c
+[popup setTapBackgroundToDismiss:YES];
+```
+
+###### - Swipe To Dismiss
+Swipe Popup to dismiss it vertically (currently working on horizontally). If you've already set a `PopupOutgoingTransitionType` it will not trigger.
+By swiping Popup, you are dismissing Popup which is actually just cancelling it. This means that all delegate methods that return either a "Success" or a "Cancel" will return a "Cancel".
+This is automatically set to NO.
+
+```objective-c
+[popup setSwipeToDismiss:YES];
+```
+
+
 ## • Delegate Methods
 
 ###### - Appear and Disappear
@@ -190,8 +209,7 @@ For all of the textfields in your Popup, it's easy to get the user's text input.
 ```
 ## • To-do
 
-- Add comments to Popup
-- Clean up codebase
+- Swipe horizontally to dismiss
 
 ## • Say Hi
 
