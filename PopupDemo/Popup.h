@@ -99,7 +99,6 @@ typedef void (^blocky)(void);
 //Type of blurred background behind Popup
 @property (nonatomic, assign) PopupBackGroundBlurType backgroundBlurType;
 
-//Colors for Popup
 @property (nonatomic, assign) UIColor *backgroundColor;
 @property (nonatomic, assign) UIColor *borderColor;
 @property (nonatomic, assign) UIColor *titleColor;

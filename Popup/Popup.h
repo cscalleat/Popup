@@ -99,7 +99,6 @@ typedef void (^blocky)(void);
 //Type of blurred background behind Popup
 @property (nonatomic, assign) PopupBackGroundBlurType backgroundBlurType;
 
-//Colors for Popup
 @property (nonatomic, assign) UIColor *backgroundColor;
 @property (nonatomic, assign) UIColor *borderColor;
 @property (nonatomic, assign) UIColor *titleColor;
@@ -148,7 +147,7 @@ typedef void (^blocky)(void);
 
 //Called when your popup is transitioning away from the center of the screen
 //Returns your popup and what button was pressed
-- (void)popupWilldisappear:(Popup *)popup buttonType:(PopupButtonType)buttonType;
+- (void)popupWillDisappear:(Popup *)popup buttonType:(PopupButtonType)buttonType;
 
 //Called when your popup has disappeared from the screen
 //Returns your popup and what button was pressed

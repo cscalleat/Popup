@@ -1142,19 +1142,15 @@ CGFloat width;
 }
 
 - (void)popupWillAppear:(Popup *)popup {
-    NSLog(@"popupWillAppear");
 }
 
 - (void)popupDidAppear:(Popup *)popup {
-    NSLog(@"popupDidAppear");
 }
 
 - (void)popupWilldisappear:(Popup *)popup buttonType:(PopupButtonType)buttonType {
-    NSLog(@"popupWilldisappear");
 }
 
 - (void)popupDidDisappear:(Popup *)popup buttonType:(PopupButtonType)buttonType {
-    NSLog(@"popupDidDisappear");
 }
 
 - (void)popupPressButton:(Popup *)popup buttonType:(PopupButtonType)buttonType {

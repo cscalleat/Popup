@@ -629,7 +629,7 @@ BOOL isBlurSet = YES;
         
         CGFloat distance = curY - finalY;
         
-        //Normalize velocity as per docs
+        //Normalize velocity
         //Multiply by -1 in this case since final desitination y < curY
         //and recog's y velocity is negative when draggin up
         //(therefore also works when released when dragging down)
