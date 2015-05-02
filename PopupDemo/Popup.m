@@ -13,6 +13,9 @@
 static const CGFloat kPopupTitleFontSize = 30;
 static const CGFloat kPopupSubTitleFontSize = 15;
 
+#define SwipeVertical @"VERTICAL"
+#define SwipeHorizontal @"HORIZONTAL"
+
 #define FlatWhiteColor [UIColor colorWithRed:0.937 green:0.945 blue:0.961 alpha:1] /*#eff1f5*/
 #define FlatWhiteDarkColor [UIColor colorWithRed:0.875 green:0.882 blue:0.91 alpha:1] /*#dfe1e8*/
 #define FlatBlackColor [UIColor colorWithRed:0.204 green:0.239 blue:0.275 alpha:1] /*#343d46*/
@@ -51,6 +54,8 @@ BOOL isBlurSet = YES;
     
     UILabel *titleLabel;
     UILabel *subTitleLabel;
+    
+    NSMutableArray *panHolder;
 
 }
 
@@ -131,7 +136,7 @@ BOOL isBlurSet = YES;
 
 
 - (void)formulateEverything {
-    
+
     mainScreen =  [UIScreen mainScreen];
     
     [self setFrame:mainScreen.bounds];
@@ -283,6 +288,10 @@ BOOL isBlurSet = YES;
         [pan setMinimumNumberOfTouches:1];
         [pan setMaximumNumberOfTouches:1];
         [popupView addGestureRecognizer:pan];
+        
+        if (!panHolder) {
+            panHolder = [NSMutableArray array];
+        }
     }
     
 }
@@ -524,8 +533,8 @@ BOOL isBlurSet = YES;
         buttonType = PopupButtonCancel;
     }
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(popupWilldisappear:buttonType:)] ) {
-        [self.delegate popupWilldisappear:self buttonType:buttonType];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(popupWillDisappear:buttonType:)] ) {
+        [self.delegate popupWillDisappear:self buttonType:buttonType];
     }
     
     if (outgoingTransitionType) {
@@ -579,15 +588,19 @@ BOOL isBlurSet = YES;
 
 #pragma mark UIPanGestureRecognizer Methods
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+
+    return YES;
+}
+
 - (void)panFired:(id)sender {
     
     //Make sure this delegate method only gets called once
     static int i = 1;
     if (i == 1) {
-        if (self.delegate && [self.delegate respondsToSelector:@selector(popupWilldisappear:buttonType:)] ) {
-            [self.delegate popupWilldisappear:self buttonType:PopupButtonCancel];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(popupWillDisappear:buttonType:)] ) {
+            [self.delegate popupWillDisappear:self buttonType:PopupButtonCancel];
             i = 0;
-            NSLog(@"-----");
         }
     }
     
@@ -607,7 +620,6 @@ BOOL isBlurSet = YES;
         frame.origin.y = curY + translation.y;
         recogView.frame = frame;
         [panRecog setTranslation:CGPointMake(0.0f, 0.0f) inView:popupView];
-        
     }
     else if (panRecog.state == UIGestureRecognizerStateEnded) {
         
@@ -628,9 +640,6 @@ BOOL isBlurSet = YES;
             springVelocity = -1.5f;
         }
         
-        NSLog(@"cur: %f/tfin: %f", curY, finalY);
-        NSLog(@"num: %f", springVelocity);
-        
         [UIView animateWithDuration:springVelocity delay:0 options:UIViewAnimationOptionCurveLinear animations:^{
             
             CGRect frame = popupView.frame;
@@ -640,7 +649,6 @@ BOOL isBlurSet = YES;
             
             [backgroundView setAlpha:0.0];
             if (curY > 115.1) {
-                NSLog(@"up");
                 [UIView animateWithDuration:0.1 animations:^{
                     popupView.frame = CGRectMake(30, 600, 300, 300);
                 } completion:^(BOOL finished) {
@@ -648,7 +656,6 @@ BOOL isBlurSet = YES;
                 }];
             }
             else {
-                NSLog(@"down");
                 [UIView animateWithDuration:0.1 animations:^{
                     popupView.frame = CGRectMake(30, -400, 300, 300);
                 } completion:^(BOOL finished) {
@@ -659,11 +666,9 @@ BOOL isBlurSet = YES;
         } completion:^(BOOL finished) {
             [self endWithButtonType:PopupButtonCancel];
         }];
-        
-        
+ 
     }
 }
-
 
 
 #pragma mark Textfield Getter Methods

@@ -148,7 +148,7 @@ typedef void (^blocky)(void);
 
 //Called when your popup is transitioning away from the center of the screen
 //Returns your popup and what button was pressed
-- (void)popupWilldisappear:(Popup *)popup buttonType:(PopupButtonType)buttonType;
+- (void)popupWillDisappear:(Popup *)popup buttonType:(PopupButtonType)buttonType;
 
 //Called when your popup has disappeared from the screen
 //Returns your popup and what button was pressed
