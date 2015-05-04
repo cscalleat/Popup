@@ -161,5 +161,4 @@ typedef void (^blocky)(void);
 //Array returns all inputs ordered by what textfield they correspond to
 - (void)dictionary:(NSMutableDictionary *)dictionary forpopup:(Popup *)popup stringsFromTextFields:(NSArray *)stringArray;
 
-
 @end

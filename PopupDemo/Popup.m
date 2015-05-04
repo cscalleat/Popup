@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Mark Miscavage. All rights reserved.
 //
 
-
 #import "Popup.h"
 
 
@@ -62,7 +61,6 @@ BOOL isBlurSet = YES;
 @end
 @implementation Popup
 
-
 #pragma mark Instance Types
 
 - (instancetype)initWithTitle:(NSString *)title
@@ -82,7 +80,6 @@ BOOL isBlurSet = YES;
     return self;
 
 }
-
 
 - (instancetype)initWithTitle:(NSString *)title
                      subTitle:(NSString *)subTitle
@@ -131,9 +128,7 @@ BOOL isBlurSet = YES;
     
 }
 
-
 #pragma mark Creation Methods
-
 
 - (void)formulateEverything {
 
@@ -201,9 +196,7 @@ BOOL isBlurSet = YES;
     
 }
 
-
 #pragma mark Accessor Methods
-
 
 - (void)setBackgroundBlurType:(PopupBackGroundBlurType)backgroundBlurType {
     [self blurBackgroundWithType:backgroundBlurType];
@@ -297,7 +290,6 @@ BOOL isBlurSet = YES;
 }
 
 #pragma mark Setup Methods
-
 
 - (void)setupTitle {
     
@@ -489,9 +481,7 @@ BOOL isBlurSet = YES;
     
 }
 
-
 #pragma mark Presentation Methods
-
 
 - (void)showPopup {
     
@@ -518,13 +508,9 @@ BOOL isBlurSet = YES;
     else {
         [self configureIncomingAnimationFor:PopupIncomingTransitionTypeAppearCenter];
     }
-    
-    
 }
 
-
 #pragma mark Dismissing Methods
-
 
 - (void)dismissPopup:(PopupButtonType)buttonType {
     
@@ -546,9 +532,7 @@ BOOL isBlurSet = YES;
 
 }
 
-
 #pragma mark Button Methods
-
 
 - (void)pressAlertButton:(id)sender {
     
@@ -585,13 +569,7 @@ BOOL isBlurSet = YES;
     
 }
 
-
 #pragma mark UIPanGestureRecognizer Methods
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-
-    return YES;
-}
 
 - (void)panFired:(id)sender {
     
@@ -670,9 +648,7 @@ BOOL isBlurSet = YES;
     }
 }
 
-
 #pragma mark Textfield Getter Methods
-
 
 - (NSMutableDictionary *)createDictionaryForTextfields {
     
@@ -748,9 +724,7 @@ BOOL isBlurSet = YES;
     
 }
 
-
 #pragma mark UITextField Methods
-
 
 - (void)setTextFieldTypeForTextFields:(NSArray *)textFieldTypeArray {
     
@@ -994,7 +968,6 @@ BOOL isBlurSet = YES;
             [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - currentKeyboardHeight, 300, 300)];
         }];
     }
-    
 }
 
 - (void)dismissKeyboards {
@@ -1005,12 +978,9 @@ BOOL isBlurSet = YES;
     [UIView animateWithDuration:0.2 animations:^{
         [popupView setFrame:CGRectMake(mainScreen.bounds.size.width/2 - 150, mainScreen.bounds.size.height/2 - 150, 300, 300)];
     }];
-    
 }
 
-
 #pragma mark Keyboard Methods
-
 
 - (void)setKeyboardNotifications {
 
@@ -1033,9 +1003,7 @@ BOOL isBlurSet = YES;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-
 #pragma mark Transition Methods
-
 
 - (void)configureIncomingAnimationFor:(PopupIncomingTransitionType)trannyType {
 
